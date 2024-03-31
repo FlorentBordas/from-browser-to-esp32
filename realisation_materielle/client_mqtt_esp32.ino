@@ -14,8 +14,7 @@ const char *ssid = "";
 const char *password = "";
 
 // MQTT Broker
-// const char *mqtt_broker = "192.168.16.26";
-const char *mqtt_broker = "192.168.16.109";
+const char *mqtt_broker = "";
 const char *mqtt_username = "";
 const char *mqtt_password = "";
 const int mqtt_port = 1883;
@@ -33,50 +32,45 @@ const char *topic_OLED = "oled_1";
 
 enum {EMPTY, FULL};
 
+// Taches
 struct Led_s {
   int timer;
   unsigned long period;
   int pin;
   int etat;
   int eteint;
-};
+}Led;
 
 struct Lum_s {
   byte pin;
-};
+}Lum;
 
 struct Oled_s {
   Adafruit_SSD1306 display;
   char str[100];
-};
+}Oled;
 
 struct Button_s {
   byte pin;
   int etat;
-};
+}Button;
 
 struct Speaker_s {
   byte pin;
-};
+}Speaker;
 
+// Mail Box
 struct mailbox_s {
   int state;
   int val;
 };
-
 struct mailbox_s mb_led = {.state = EMPTY};
 struct mailbox_s mb_lum = {.state = EMPTY};
 struct mailbox_s mb_oled = {.state = EMPTY};
 struct mailbox_s mb_button = {.state = EMPTY};
 struct mailbox_s mb_speaker = {.state = EMPTY};
 
-// Declaration des taches
-struct Led_s  Led;
-struct Lum_s  Lum;
-struct Oled_s Oled;
-struct Button_s Button;
-struct Speaker_s Speaker;
-
+// Fonction de setup
 void setup() {
   Serial.begin(9600);
   setup_wifi();
@@ -96,6 +90,7 @@ void setup() {
   setup_Speaker(&Speaker, 17); // Broche 17 -> speaker
 }
 
+// Fonction qui boucle
 void loop() {
   client.loop();
   loop_Led(&Led);
@@ -105,6 +100,7 @@ void loop() {
   loop_Speaker(&Speaker);
 }
 
+// Configuration du Wifi
 void setup_wifi() {
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -114,6 +110,7 @@ void setup_wifi() {
   Serial.println("Connected to the Wi-Fi network");
 }
 
+// Configuration du Broker
 void setup_broker() {
   client.setServer(mqtt_broker, mqtt_port);
   client.setCallback(callback);
@@ -130,6 +127,8 @@ void setup_broker() {
     }
   }
 }
+
+// Configuration des taches
 
 void setup_Led(struct Led_s *ctx, int timer, unsigned long period, byte pin) {
   ctx->timer = timer;
@@ -172,6 +171,8 @@ void setup_Button(struct Button_s *button, byte pin) {
 void setup_Speaker(struct Speaker_s *speaker, byte pin) {
   speaker->pin = pin;
 }
+
+// Loop des taches
 
 void loop_Led(struct Led_s *led) {
   if (led->eteint || !waitFor(led->timer, led->period)) return;
@@ -217,6 +218,7 @@ void loop_Speaker(struct Speaker_s *speaker) {
 
 }
 
+// Renvoie si le timer est fini
 unsigned int waitFor(int timer, unsigned long period) {
   static unsigned long waitForTimer[MAX_WAIT_FOR_TIMER];
   unsigned long newTime = micros() / period;
@@ -228,17 +230,20 @@ unsigned int waitFor(int timer, unsigned long period) {
   return delta;
 }
 
+// Lors de la reception d'un message
 void callback(char *topic, byte *payload, unsigned int length) {
   Serial.print("Message received on topic ");
   Serial.println(topic);
 
+  // Led
   if (strcmp(topic, topic_led) == 0) {
-    //Allume la led
+    // Eteint la led
     if (length == 1 && *payload == (byte)'0') {
       Led.etat = 0;
       Led.eteint = 1;
       return;
     }
+    // Fais clignoter les leds
     Led.eteint = 0;
     mb_led.state = FULL;
     mb_led.val = 0;
