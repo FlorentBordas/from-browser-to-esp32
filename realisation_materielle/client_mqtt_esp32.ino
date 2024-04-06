@@ -3,36 +3,36 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-// Screen
+#include "music/musique.h"
+
+// ---------------------- Screen ----------------------
 #define SCREEN_WIDTH  128
 #define SCREEN_HEIGHT 64
 #define OLED_RESET    16
 #define MAX_WAIT_FOR_TIMER 4
 
-// WiFi
-const char *ssid = "";
-const char *password = "";
+// ----------------------- WiFi -----------------------
+const char *ssid = "RedmiNote11";
+const char *password = "coucoucoucou";
 
-// MQTT Broker
-const char *mqtt_broker = "";
-const char *mqtt_username = "";
-const char *mqtt_password = "";
+// -------------------- MQTT Broker -------------------
+const char *mqtt_broker = "192.168.224.109";
 const int mqtt_port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-// Topic
+// ----------------------- Topic ----------------------
 const char *topic_led = "led_1";
 const char *topic_RPR = "recv_photoresistance_1";
 const char *topic_SPR = "send_photoresistance_1";
 const char *topic_RBTN = "recv_button_1";
 const char *topic_SBTN = "send_button_1";
 const char *topic_OLED = "oled_1";
-// const char *topic_SPK = "speaker";
+const char *topic_SPK = "speaker_1";
 
+// ---------------------- Taches ----------------------
 enum {EMPTY, FULL};
 
-// Taches
 struct Led_s {
   int timer;
   unsigned long period;
@@ -59,7 +59,7 @@ struct Speaker_s {
   byte pin;
 }Speaker;
 
-// Mail Box
+// --------------------- Mail Box ---------------------
 struct mailbox_s {
   int state;
   int val;
@@ -70,7 +70,7 @@ struct mailbox_s mb_oled = {.state = EMPTY};
 struct mailbox_s mb_button = {.state = EMPTY};
 struct mailbox_s mb_speaker = {.state = EMPTY};
 
-// Fonction de setup
+// ----------------------- Fonction de setup -----------------------
 void setup() {
   Serial.begin(9600);
   setup_wifi();
@@ -80,7 +80,7 @@ void setup() {
   client.subscribe(topic_RPR);
   client.subscribe(topic_RBTN);
   client.subscribe(topic_OLED);
-  // client.subscribe(topic_SPK);
+  client.subscribe(topic_SPK);
 
   // Initialize tasks
   setup_Led(&Led, 0, 1, LED_BUILTIN); // Led est exécutée toutes les 100ms 
@@ -90,17 +90,7 @@ void setup() {
   setup_Speaker(&Speaker, 17); // Broche 17 -> speaker
 }
 
-// Fonction qui boucle
-void loop() {
-  client.loop();
-  loop_Led(&Led);
-  loop_Lum(&Lum);
-  loop_Oled(&Oled);
-  loop_Button(&Button);
-  loop_Speaker(&Speaker);
-}
-
-// Configuration du Wifi
+// ------------- Configuration du Wifi -------------
 void setup_wifi() {
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -118,7 +108,7 @@ void setup_broker() {
     String client_id = "esp32-client-1";
     client_id += String(WiFi.macAddress());
     Serial.printf("The client %s connects to the public MQTT broker\n", client_id.c_str());
-    if (client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
+    if (client.connect(client_id.c_str())) {
       Serial.println("Public EMQX MQTT broker connected");
     } else {
       Serial.print("failed with state ");
@@ -128,8 +118,7 @@ void setup_broker() {
   }
 }
 
-// Configuration des taches
-
+// ------------- Configuration des taches -------------
 void setup_Led(struct Led_s *ctx, int timer, unsigned long period, byte pin) {
   ctx->timer = timer;
   ctx->period = period;
@@ -165,15 +154,27 @@ void setup_Oled(struct Oled_s *oled) {
 
 void setup_Button(struct Button_s *button, byte pin) {
   button->pin = pin;
-  pinMode(button->pin, INPUT);
+  pinMode(button->pin, INPUT_PULLUP);
 }
+
+const int TONE_PWM_CHANNEL = 0;
 
 void setup_Speaker(struct Speaker_s *speaker, byte pin) {
   speaker->pin = pin;
+  pinMode(speaker->pin, OUTPUT);
 }
 
-// Loop des taches
+// ----------------------- Fonction qui boucle -----------------------
+void loop() {
+  client.loop();
+  loop_Led(&Led);
+  loop_Lum(&Lum);
+  loop_Oled(&Oled);
+  loop_Button(&Button);
+  loop_Speaker(&Speaker);
+}
 
+// ------------- Loop des taches -------------
 void loop_Led(struct Led_s *led) {
   if (led->eteint || !waitFor(led->timer, led->period)) return;
   digitalWrite(led->pin, led->etat);
@@ -208,17 +209,67 @@ void loop_Button(struct Button_s *button) {
   if (mb_button.state == EMPTY) return;
   mb_button.state = EMPTY;
   int etat = digitalRead(button->pin);
-  Serial.println(etat);
+  button->etat = 1 - etat;
   char str[2] = { 0 };
-  itoa(etat, str, 10);
+  itoa(button->etat, str, 10);
   client.publish(topic_SBTN, str);
 }
 
 void loop_Speaker(struct Speaker_s *speaker) {
+  if (mb_speaker.val == 0) {
 
+  } else if ( mb_speaker.val == 1) {
+    play_chevelle_the_red(speaker->pin);
+  } else if ( mb_speaker.val == 2) {
+    play_doom(speaker->pin);
+  } else if ( mb_speaker.val == 3) {
+    play_game_of_thrones(speaker->pin);
+  } else if ( mb_speaker.val == 4) {
+    play_happy_birthday(speaker->pin);
+  } else if ( mb_speaker.val == 5) {
+    play_harry_potter(speaker->pin);
+  } else if ( mb_speaker.val == 6) {
+    play_home_alone(speaker->pin);
+  } else if ( mb_speaker.val == 7) {
+    play_imagine_dragons_enemy(speaker->pin);
+  } else if ( mb_speaker.val == 8) {
+    play_its_a_small_world(speaker->pin);
+  } else if ( mb_speaker.val == 9) {
+    play_kaleo_way_down_we_go(speaker->pin);
+  } else if ( mb_speaker.val == 10) {
+    play_mario_bros(speaker->pin);
+  } else if ( mb_speaker.val == 11) {
+    play_maroon5_memories(speaker->pin);
+  } else if ( mb_speaker.val == 12) {
+    play_nokia(speaker->pin);
+  } else if ( mb_speaker.val == 13) {
+    play_pacman(speaker->pin);
+  } else if ( mb_speaker.val == 14) {
+    play_pink_panther(speaker->pin);
+  } else if ( mb_speaker.val == 15) {
+    play_pirates_of_the_caribbean(speaker->pin);
+  } else if ( mb_speaker.val == 16) {
+    play_shape_of_you(speaker->pin);
+  } else if ( mb_speaker.val == 17) {
+    play_star_wars(speaker->pin);
+  } else if ( mb_speaker.val == 18) {
+    play_tetris(speaker->pin);
+  } else if ( mb_speaker.val == 19) {
+    play_the_godfather(speaker->pin);
+  } else if ( mb_speaker.val == 20) {
+    play_the_lion_sleeps_tonight(speaker->pin);
+  } else if ( mb_speaker.val == 21) {
+    play_the_nightmare_before_christmas(speaker->pin);
+  } else if ( mb_speaker.val == 22) {
+    play_the_simpsons(speaker->pin);
+  } else if ( mb_speaker.val == 23) {
+    play_drift(speaker->pin);
+  } else if ( mb_speaker.val == 24) {
+    play_xmas(speaker->pin);
+  }
 }
 
-// Renvoie si le timer est fini
+// ----------- Renvoie si le timer est fini -----------
 unsigned int waitFor(int timer, unsigned long period) {
   static unsigned long waitForTimer[MAX_WAIT_FOR_TIMER];
   unsigned long newTime = micros() / period;
@@ -230,7 +281,7 @@ unsigned int waitFor(int timer, unsigned long period) {
   return delta;
 }
 
-// Lors de la reception d'un message
+// -------- Lors de la reception d'un message ---------
 void callback(char *topic, byte *payload, unsigned int length) {
   Serial.print("Message received on topic ");
   Serial.println(topic);
@@ -277,7 +328,13 @@ void callback(char *topic, byte *payload, unsigned int length) {
   }
 
   // Speaker
-  // else if (strcmp(topic, topic_SPK) == 0) {
-  //   // Joue du son
-  // }
+  else if (strcmp(topic, topic_SPK) == 0) {
+    // Joue du son
+    mb_speaker.state = FULL;
+    mb_speaker.val = payload[0] - '0';
+  //   if (mb_speaker.val == 0)
+  //     arret = 1;
+  //   else
+  //     arret = 0;
+  }
 }

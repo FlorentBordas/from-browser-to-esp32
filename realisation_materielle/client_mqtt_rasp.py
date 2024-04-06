@@ -32,7 +32,7 @@ def on_connect(client, userdata, flags, rc):
 # Fonction de réception des messages
 def on_message(client, userdata, message):
     print("Message reçu on topic " + message.topic)
-    db.insert_data(message.topic, str(message.payload))
+    db.insert_data(message.topic, message.payload.decode("utf-8"))
 
 # Il faut gerer le cas ou on doit envoyé un message a l'esp32
 
@@ -42,7 +42,7 @@ def main():
     client.on_connect = on_connect
     client.on_message = on_message
     db.open_data()
-    client.loop_forever()
+    client.loop_start()
 
 if __name__ == "__main__":
     main()
