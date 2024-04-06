@@ -12,11 +12,11 @@
 #define MAX_WAIT_FOR_TIMER 4
 
 // ----------------------- WiFi -----------------------
-const char *ssid = "RedmiNote11";
-const char *password = "coucoucoucou";
+const char *ssid = "";
+const char *password = "";
 
 // -------------------- MQTT Broker -------------------
-const char *mqtt_broker = "192.168.224.109";
+const char *mqtt_broker = "";
 const int mqtt_port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -57,6 +57,10 @@ struct Button_s {
 
 struct Speaker_s {
   byte pin;
+  int size;
+  int note;
+  void (*music)(int, int);
+  int arret;
 }Speaker;
 
 // --------------------- Mail Box ---------------------
@@ -216,57 +220,9 @@ void loop_Button(struct Button_s *button) {
 }
 
 void loop_Speaker(struct Speaker_s *speaker) {
-  if (mb_speaker.val == 0) {
-
-  } else if ( mb_speaker.val == 1) {
-    play_chevelle_the_red(speaker->pin);
-  } else if ( mb_speaker.val == 2) {
-    play_doom(speaker->pin);
-  } else if ( mb_speaker.val == 3) {
-    play_game_of_thrones(speaker->pin);
-  } else if ( mb_speaker.val == 4) {
-    play_happy_birthday(speaker->pin);
-  } else if ( mb_speaker.val == 5) {
-    play_harry_potter(speaker->pin);
-  } else if ( mb_speaker.val == 6) {
-    play_home_alone(speaker->pin);
-  } else if ( mb_speaker.val == 7) {
-    play_imagine_dragons_enemy(speaker->pin);
-  } else if ( mb_speaker.val == 8) {
-    play_its_a_small_world(speaker->pin);
-  } else if ( mb_speaker.val == 9) {
-    play_kaleo_way_down_we_go(speaker->pin);
-  } else if ( mb_speaker.val == 10) {
-    play_mario_bros(speaker->pin);
-  } else if ( mb_speaker.val == 11) {
-    play_maroon5_memories(speaker->pin);
-  } else if ( mb_speaker.val == 12) {
-    play_nokia(speaker->pin);
-  } else if ( mb_speaker.val == 13) {
-    play_pacman(speaker->pin);
-  } else if ( mb_speaker.val == 14) {
-    play_pink_panther(speaker->pin);
-  } else if ( mb_speaker.val == 15) {
-    play_pirates_of_the_caribbean(speaker->pin);
-  } else if ( mb_speaker.val == 16) {
-    play_shape_of_you(speaker->pin);
-  } else if ( mb_speaker.val == 17) {
-    play_star_wars(speaker->pin);
-  } else if ( mb_speaker.val == 18) {
-    play_tetris(speaker->pin);
-  } else if ( mb_speaker.val == 19) {
-    play_the_godfather(speaker->pin);
-  } else if ( mb_speaker.val == 20) {
-    play_the_lion_sleeps_tonight(speaker->pin);
-  } else if ( mb_speaker.val == 21) {
-    play_the_nightmare_before_christmas(speaker->pin);
-  } else if ( mb_speaker.val == 22) {
-    play_the_simpsons(speaker->pin);
-  } else if ( mb_speaker.val == 23) {
-    play_drift(speaker->pin);
-  } else if ( mb_speaker.val == 24) {
-    play_xmas(speaker->pin);
-  }
+  if (mb_speaker.state == EMPTY || speaker->arret) return;
+  speaker->music(speaker->pin, speaker->note % speaker->size);
+  speaker->note++;
 }
 
 // ----------- Renvoie si le timer est fini -----------
@@ -331,10 +287,89 @@ void callback(char *topic, byte *payload, unsigned int length) {
   else if (strcmp(topic, topic_SPK) == 0) {
     // Joue du son
     mb_speaker.state = FULL;
-    mb_speaker.val = payload[0] - '0';
-  //   if (mb_speaker.val == 0)
-  //     arret = 1;
-  //   else
-  //     arret = 0;
+    mb_speaker.val = 0;
+    for (unsigned int i = 0; i < length; i++) {
+      mb_speaker.val *= 10;
+      mb_speaker.val += payload[i] - '0';
+    }
+    if (mb_speaker.val == 0) {
+      Speaker.arret = 1;
+      return;
+    } else if (mb_speaker.val == 1) {
+      Speaker.size = sizeof(chevelle_the_red_durations);
+      Speaker.music = play_chevelle_the_red;
+    } else if (mb_speaker.val == 2) {
+      Speaker.size = sizeof(doom_durations);
+      Speaker.music = play_doom;
+    } else if (mb_speaker.val == 3) {
+      Speaker.size = sizeof(game_of_thrones_durations);
+      Speaker.music = play_game_of_thrones;
+    } else if (mb_speaker.val == 4) {
+      Speaker.size = sizeof(happy_birthday_durations);
+      Speaker.music = play_happy_birthday;
+    } else if (mb_speaker.val == 5) {
+      Speaker.size = sizeof(harry_potter_durations);
+      Speaker.music = play_harry_potter;
+    } else if (mb_speaker.val == 6) {
+      Speaker.size = sizeof(home_alone_durations);
+      Speaker.music = play_home_alone;
+    } else if (mb_speaker.val == 7) {
+      Speaker.size = sizeof(imagine_dragons_enemy_durations);
+      Speaker.music = play_imagine_dragons_enemy;
+    } else if (mb_speaker.val == 8) {
+      Speaker.size = sizeof(its_a_small_world_durations);
+      Speaker.music = play_its_a_small_world;
+    } else if (mb_speaker.val == 9) {
+      Speaker.size = sizeof(kaleo_way_down_we_go_durations);
+      Speaker.music = play_kaleo_way_down_we_go;
+    } else if (mb_speaker.val == 10) {
+      Speaker.size = sizeof(mario_bros_durations);
+      Speaker.music = play_mario_bros;
+    } else if (mb_speaker.val == 11) {
+      Speaker.size = sizeof(maroon5_memories_durations);
+      Speaker.music = play_maroon5_memories;
+    } else if (mb_speaker.val == 12) {
+      Speaker.size = sizeof(nokia_durations);
+      Speaker.music = play_nokia;
+    } else if (mb_speaker.val == 13) {
+      Speaker.size = sizeof(pacman_durations);
+      Speaker.music = play_pacman;
+    } else if (mb_speaker.val == 14) {
+      Speaker.size = sizeof(pink_panther_durations);
+      Speaker.music = play_pink_panther;
+    } else if (mb_speaker.val == 15) {
+      Speaker.size = sizeof(pirates_of_the_caribbean_durations);
+      Speaker.music = play_pirates_of_the_caribbean;
+    } else if (mb_speaker.val == 16) {
+      Speaker.size = sizeof(shape_of_you_durations);
+      Speaker.music = play_shape_of_you;
+    } else if (mb_speaker.val == 17) {
+      Speaker.size = sizeof(star_wars_durations);
+      Speaker.music = play_star_wars;
+    } else if (mb_speaker.val == 18) {
+      Speaker.size = sizeof(tetris_durations);
+      Speaker.music = play_tetris;
+    } else if (mb_speaker.val == 19) {
+      Speaker.size = sizeof(the_godfather_durations);
+      Speaker.music = play_the_godfather;
+    } else if (mb_speaker.val == 20) {
+      Speaker.size = sizeof(the_lion_sleeps_tonight_durations);
+      Speaker.music = play_the_lion_sleeps_tonight;
+    } else if (mb_speaker.val == 21) {
+      Speaker.size = sizeof(the_nightmare_before_christmas_durations);
+      Speaker.music = play_the_nightmare_before_christmas;
+    } else if (mb_speaker.val == 22) {
+      Speaker.size = sizeof(the_simpsons_durations);
+      Speaker.music = play_the_simpsons;
+    } else if (mb_speaker.val == 23) {
+      Speaker.size = sizeof(drift_durations);
+      Speaker.music = play_drift;
+    } else if (mb_speaker.val == 24) {
+      Speaker.size = sizeof(xmas_durations);
+      Speaker.music = play_xmas;
+    }
+    Speaker.size /= sizeof(int);
+    Speaker.note = 0;
+    Speaker.arret = 0;
   }
 }

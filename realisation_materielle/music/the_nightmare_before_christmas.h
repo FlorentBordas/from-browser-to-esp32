@@ -56,22 +56,18 @@ int the_nightmare_before_christmas_durations[] = {
   4, 4, 2
 };
 
-void play_the_nightmare_before_christmas(int pin)
+void play_the_nightmare_before_christmas(int pin, int note)
 {
-  int size = sizeof(the_nightmare_before_christmas_durations) / sizeof(int);
+  //to calculate the note duration, take one second divided by the note type.
+  //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+  int duration = 1000 / the_nightmare_before_christmas_durations[note];
+  tone(pin, the_nightmare_before_christmasmelody[note], duration);
 
-  for (int note = 0; note < size; note++) {
-    //to calculate the note duration, take one second divided by the note type.
-    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-    int duration = 1000 / the_nightmare_before_christmas_durations[note];
-    tone(pin, the_nightmare_before_christmasmelody[note], duration);
+  //to distinguish the notes, set a minimum time between them.
+  //the note's duration + 30% seems to work well:
+  int pauseBetweenNotes = duration * 1.30;
+  delay(pauseBetweenNotes);
 
-    //to distinguish the notes, set a minimum time between them.
-    //the note's duration + 30% seems to work well:
-    int pauseBetweenNotes = duration * 1.30;
-    delay(pauseBetweenNotes);
-
-    //stop the tone playing:
-    noTone(pin);
-  }
+  //stop the tone playing:
+  noTone(pin);
 }

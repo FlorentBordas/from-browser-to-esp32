@@ -184,22 +184,18 @@ int the_lion_sleeps_tonight_durations[] = {
   1
 };
 
-void play_the_lion_sleeps_tonight(int pin)
+void play_the_lion_sleeps_tonight(int pin, int note)
 {
-  int size = sizeof(the_lion_sleeps_tonight_durations) / sizeof(int);
+  //to calculate the note duration, take one second divided by the note type.
+  //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+  int duration = 1000 / the_lion_sleeps_tonight_durations[note];
+  tone(pin, the_lion_sleeps_tonight_melody[note], duration);
 
-  for (int note = 0; note < size; note++) {
-    //to calculate the note duration, take one second divided by the note type.
-    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-    int duration = 1000 / the_lion_sleeps_tonight_durations[note];
-    tone(pin, the_lion_sleeps_tonight_melody[note], duration);
-
-    //to distinguish the notes, set a minimum time between them.
-    //the note's duration + 30% seems to work well:
-    int pauseBetweenNotes = duration * 1.30;
-    delay(pauseBetweenNotes);
-    
-    //stop the tone playing:
-    noTone(pin);
-  }
+  //to distinguish the notes, set a minimum time between them.
+  //the note's duration + 30% seems to work well:
+  int pauseBetweenNotes = duration * 1.30;
+  delay(pauseBetweenNotes);
+  
+  //stop the tone playing:
+  noTone(pin);
 }
