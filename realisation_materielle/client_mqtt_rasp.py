@@ -20,6 +20,7 @@ topic_OLED_1 = "oled_1"
 topic_OLED_2 = "oled_2"
 topic_SPK = "speaker"
 
+
 # Fonction de connexion au broker
 # Souscrire au topic une fois connecté
 def on_connect(client, userdata, flags, rc):
@@ -29,20 +30,24 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(topic_SBTN_1)
     client.subscribe(topic_SBTN_2)
 
+
 # Fonction de réception des messages
 def on_message(client, userdata, message):
     print("Message reçu on topic " + message.topic)
     db.insert_data(message.topic, message.payload.decode("utf-8"))
 
+
 # Il faut gerer le cas ou on doit envoyé un message a l'esp32
 
+
 def main():
-    client = mqtt.Client() 
+    client = mqtt.Client()
     client.connect(broker_address, broker_port)
     client.on_connect = on_connect
     client.on_message = on_message
     db.open_data()
     client.loop_start()
+
 
 if __name__ == "__main__":
     main()

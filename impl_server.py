@@ -11,20 +11,23 @@ class My_HTTP_Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
-        data = self.read_json()
-        print("User Data: " + str(data))
-        self.handle_http(200, "text/html")
+        self.handle_data_exchange()
 
     def do_GET(self):
-        if self.path.startswith("/main"):
+        if self.path.startswith("/request"):
             self.handle_data_exchange()
         else:
             self.handle_static()
 
     def handle_data_exchange(self):
         match self.path:
-            case "/main/comms":
-                self.send_json({"Communication": 15})
+            case "/input_user":
+                data = self.read_json()
+                print(data)
+                self.send_json(data)
+
+            case "/request_user":
+                data = self.read_json()
 
             case _:
                 self.handle_http(404, "text/html")

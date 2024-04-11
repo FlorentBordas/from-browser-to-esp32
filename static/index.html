@@ -2,14 +2,67 @@
 <html lang="en">
 
 <head>
+	<script src="event_handler.js"></script>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-	<h1>Bienvenue</h1>
-	<form method="post">
-		<button id="button" onclick="jason">CLIQUEZ<br>
-	</form>
+	<div class="inputBox">
+		<div>
+			<p class="parag">Display Value</p>
+			<input type="text" id="input_display">
+			<button id="button" class="button" onclick="displaySet()">Set Display
+		</div>
+
+		<div>
+			<p class="parag">Buzzer Value</p>
+			<select type="text" id="buzzField">
+				<option value="">Choose a sound to play</option>
+				<option value="indianajones">Indiana Jones</option>
+			</select>
+			<button class="button" onclick="buzzerSet()">Set Buzzer
+				<button class="button" onclick="buzzerStop()">Stop Buzzer
+		</div>
+
+		<div>
+			<p class="parag">Led_1 Value</p>
+			<input type="text" id="led1Field" maxlength="5">
+			<button class="button" onclick="setLed1()">Set Led_1
+		</div>
+
+		<div>
+			<p class="parag">Led_2 Value</p>
+			<input type="text" id="led2Field" maxlength="5">
+			<button class="button" onclick="setLed2()">Set Led_2
+		</div>
+	</div>
+
+	<div class="requestBox">
+		<div>
+			<p class="parag">Photosensor</p>
+			<button class="button" onclick="photoGet()">Get Photosensor Value
+		</div>
+
+		<div>
+			<p class="parag">Button</p>
+			<button class="button" onclick="buttonGet()">Get Button Value
+		</div>
+	</div>
+
+	<div class="choiceBox">
+		<p class="parag">Choose the ESP you want to interact with (both is possible)</p>
+		<input class="checkbox" type="checkbox" id="esp1" name="choice1" value="esp1" />
+		<label class="checkLabel" for="esp1">ESP-1</label>
+		<input class="checkbox" type="checkbox" id="esp2" name="choice2" value="esp2" />
+		<label class="checkLabel" for="esp2">ESP-2</label>
+		<button class="button" onclick="setTarget()">Select</button>
+		<h3 id="error"></h3>
+	</div>
+
+	<div class="result">
+		<h2></h2>
+	</div>
 </body>
 
 </html>
