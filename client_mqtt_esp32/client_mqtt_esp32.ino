@@ -12,11 +12,11 @@
 #define MAX_WAIT_FOR_TIMER 4
 
 // ----------------------- WiFi -----------------------
-const char *ssid = "FlorentIphone";
-const char *password = "310896FlorentBordas";
+const char *ssid = "RedmiNote11";
+const char *password = "coucoucoucou";
 
 // -------------------- MQTT Broker -------------------
-const char *mqtt_broker = "172.20.10.2";
+const char *mqtt_broker = "192.168.85.109";
 const int mqtt_port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -96,12 +96,12 @@ void setup() {
 
 // ------------- Configuration du Wifi -------------
 void setup_wifi() {
-  WiFi.mode(WIFI_STA);
+  // WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(3000);
     Serial.println("Connecting to WiFi..");
-    Serial.println(WiFi.status());
+    // Serial.println(WiFi.status());
     
   }
   Serial.println("Connected to the Wi-Fi network");
@@ -295,6 +295,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
       mb_speaker.val *= 10;
       mb_speaker.val += payload[i] - '0';
     }
+    Serial.println(mb_speaker.val);
     if (mb_speaker.val == 0) {
       Speaker.arret = 1;
       return;
