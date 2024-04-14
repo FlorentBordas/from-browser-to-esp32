@@ -2,6 +2,8 @@ from http.server import BaseHTTPRequestHandler
 import json
 import os
 import mimetypes
+from client_mqtt_rasp import send_esp32
+import database as db
 
 
 class My_HTTP_Handler(BaseHTTPRequestHandler):
@@ -23,7 +25,9 @@ class My_HTTP_Handler(BaseHTTPRequestHandler):
         match self.path:
             case "/input_user":
                 data = self.read_json()
-                print(data)
+                print(data["topic"])
+                print(data["val"])
+                send_esp32(data["topic"], data["val"])
                 self.send_json(data)
 
             case "/request_user":

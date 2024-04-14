@@ -12,11 +12,11 @@
 #define MAX_WAIT_FOR_TIMER 4
 
 // ----------------------- WiFi -----------------------
-const char *ssid = "";
-const char *password = "";
+const char *ssid = "FlorentIphone";
+const char *password = "310896FlorentBordas";
 
 // -------------------- MQTT Broker -------------------
-const char *mqtt_broker = "";
+const char *mqtt_broker = "172.20.10.2";
 const int mqtt_port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -96,10 +96,13 @@ void setup() {
 
 // ------------- Configuration du Wifi -------------
 void setup_wifi() {
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(3000);
     Serial.println("Connecting to WiFi..");
+    Serial.println(WiFi.status());
+    
   }
   Serial.println("Connected to the Wi-Fi network");
 }
@@ -110,13 +113,13 @@ void setup_broker() {
   client.setCallback(callback);
   while (!client.connected()) {
     String client_id = "esp32-client-1";
-    client_id += String(WiFi.macAddress());
+    client_id += "  "+String(WiFi.macAddress());
     Serial.printf("The client %s connects to the public MQTT broker\n", client_id.c_str());
     if (client.connect(client_id.c_str())) {
       Serial.println("Public EMQX MQTT broker connected");
     } else {
       Serial.print("failed with state ");
-      Serial.print(client.state());
+      Serial.print(client.state()+" ");
       delay(2000);
     }
   }

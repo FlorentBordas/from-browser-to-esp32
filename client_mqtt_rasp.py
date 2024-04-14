@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import database as db
 
 # Paramètres du broker MQTT
-broker_address = "localhost"
+broker_address = "172.20.10.2"
 broker_port = 1883
 
 # Topics
@@ -18,7 +18,9 @@ topic_SBTN_1 = "send_button_1"
 topic_SBTN_2 = "send_button_2"
 topic_OLED_1 = "oled_1"
 topic_OLED_2 = "oled_2"
-topic_SPK = "speaker"
+topic_SPK = "speaker_1"
+
+client = mqtt.Client()
 
 
 # Fonction de connexion au broker
@@ -37,16 +39,17 @@ def on_message(client, userdata, message):
     db.insert_data(message.topic, message.payload.decode("utf-8"))
 
 
-# Il faut gerer le cas ou on doit envoyé un message a l'esp32
+def send_esp32(topic, value):
+    print(topic + " " + value)
+    client.publish(topic, value)
 
 
 def main():
-    client = mqtt.Client()
     client.connect(broker_address, broker_port)
     client.on_connect = on_connect
     client.on_message = on_message
     db.open_data()
-    client.loop_start()
+    client.loop_forever()
 
 
 if __name__ == "__main__":

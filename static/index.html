@@ -19,50 +19,66 @@
 			<p class="parag">Buzzer Value</p>
 			<select type="text" id="buzzField">
 				<option value="">Choose a sound to play</option>
-				<option value="indianajones">Indiana Jones</option>
+				<option value="1">Christmas</option>
+				<option value="2">Chevelle La Rouge</option>
+				<option value="3">Doom</option>
+				<option value="4">Game of Thrones</option>
+				<option value="5">Happy Birthday</option>
+				<option value="6">Harry Potter</option>
+				<option value="7">Home Alone</option>
+				<option value="8">Ennemy</option>
+				<option value="9">It's a Small World</option>
+				<option value="10">Way Down We Go</option>
+				<option value="11">Mario Bros</option>
+				<option value="12">Memories</option>
+				<option value="13">Nokia</option>
+				<option value="14">Pacman</option>
+				<option value="15">Pink Panther</option>
+				<option value="16">Pirates of the Caribbean</option>
+				<option value="17">Shape of You</option>
+				<option value="18">Star Wars</option>
+				<option value="19">Tetris</option>
+				<option value="20">The Godfather</option>
+				<option value="21">The Lion Sleeps Tonight</option>
+				<option value="22">The Nightmare Before Christmas</option>
+				<option value="23">The Simpsons</option>
+				<option value="24">Tokyo Drift</option>
 			</select>
 			<button class="button" onclick="buzzerSet()">Set Buzzer
 				<button class="button" onclick="buzzerStop()">Stop Buzzer
 		</div>
 
 		<div>
-			<p class="parag">Led_1 Value</p>
-			<input type="text" id="led1Field" maxlength="5">
-			<button class="button" onclick="setLed1()">Set Led_1
+			<p class="parag">Led_1 Period</p>
+			<input type="text" id="ledField" maxlength="5">
+			<button class="button" onclick="setLed()">Set Led Period
 		</div>
 
-		<div>
-			<p class="parag">Led_2 Value</p>
-			<input type="text" id="led2Field" maxlength="5">
-			<button class="button" onclick="setLed2()">Set Led_2
+		<div class="requestBox">
+			<div>
+				<p class="parag">Photosensor</p>
+				<button class="button" onclick="photoGet()">Get Photosensor Value
+			</div>
+
+			<div>
+				<p class="parag">Button</p>
+				<button class="button" onclick="buttonGet()">Get Button Value
+			</div>
 		</div>
-	</div>
 
-	<div class="requestBox">
-		<div>
-			<p class="parag">Photosensor</p>
-			<button class="button" onclick="photoGet()">Get Photosensor Value
+		<div class="choiceBox">
+			<p class="parag">Choose the ESP you want to interact with (both is possible)</p>
+			<input class="checkbox" type="checkbox" id="esp1" name="choice1" value="esp1" />
+			<label class="checkLabel" for="esp1">ESP-1</label>
+			<input class="checkbox" type="checkbox" id="esp2" name="choice2" value="esp2" />
+			<label class="checkLabel" for="esp2">ESP-2</label>
+			<button class="button" onclick="setTarget()">Select</button>
+			<h3 id="error"></h3>
 		</div>
 
-		<div>
-			<p class="parag">Button</p>
-			<button class="button" onclick="buttonGet()">Get Button Value
+		<div class="result">
+			<h2></h2>
 		</div>
-	</div>
-
-	<div class="choiceBox">
-		<p class="parag">Choose the ESP you want to interact with (both is possible)</p>
-		<input class="checkbox" type="checkbox" id="esp1" name="choice1" value="esp1" />
-		<label class="checkLabel" for="esp1">ESP-1</label>
-		<input class="checkbox" type="checkbox" id="esp2" name="choice2" value="esp2" />
-		<label class="checkLabel" for="esp2">ESP-2</label>
-		<button class="button" onclick="setTarget()">Select</button>
-		<h3 id="error"></h3>
-	</div>
-
-	<div class="result">
-		<h2></h2>
-	</div>
 </body>
 
 </html>

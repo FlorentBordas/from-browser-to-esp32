@@ -23,39 +23,39 @@ async function setTarget() {
 }
 
 async function displaySet() {
-  apiPost("display", 'input_display');
+  apiPost("oled", 'input_display');
 }
 
 async function buzzerSet() {
-  apiPost("buzzer", 'buzzField');
+  apiPost("speaker", 'buzzField');
 }
 
 async function buzzerStop() {
-  apiPost("buzzer", 0);
+  apiPost("speaker", 0);
 }
 
-async function setLed1() {
-  apiPost("led1", 'led1Field');
-}
-
-async function setLed2() {
-  apiPost("led2", 'led2Field');
+async function setLed() {
+  apiPost("led", 'ledField');
 }
 
 async function photoGet() {
-  apiGet("photo_sensor");
+  apiGet("recv_photoresistance");
 }
 
 async function buttonGet() {
-  apiGet("button");
+  apiGet("recv_button");
 }
 
 async function apiPost(topic, id) {
   const html_element = document.getElementById(id);
+  if(target === null) {
+    console.log("No Target");
+    return Error;
+  }
   if (target === "esp1") {
     const res = await fetch("/input_user", {
       method: "POST",
-      body: JSON.stringify({ topic: topic, val: html_element.value }).trim()
+      body: JSON.stringify({ topic: topic + "_1", val: html_element.value }).trim()
     });
     console.log(res);
     const data = await res.json();
@@ -64,7 +64,7 @@ async function apiPost(topic, id) {
   else if (target === "esp2") {
     const res = await fetch("/input_user", {
       method: "POST",
-      body: JSON.stringify({ topic: topic, val: html_element.value })
+      body: JSON.stringify({ topic: topic + "_2", val: html_element.value })
     });
     const data = await res.json();
     return data;
@@ -72,8 +72,8 @@ async function apiPost(topic, id) {
   else {
     const res = await fetch("/input_user", {
       method: "POST",
-      body: JSON.stringify({ topic: topic + "esp1", val: html_element.value }).trim() +
-        JSON.stringify({ topic: topic + "esp2", val: html_element.value }).trim()
+      body: JSON.stringify({ topic: topic + "_1", val: html_element.value }) +
+        JSON.stringify({ topic: topic + "_2", val: html_element.value })
     });
     const data = await res.json();
     return data;
@@ -84,21 +84,21 @@ async function apiGet(topic) {
   if (target === "esp1") {
     const res = await fetch("/request_user", {
       method: "GET",
-      body: JSON.stringify({ topic: topic })
+      body: JSON.stringify({ topic: topic + "_1"})
     });
     const data = await res.json();
   }
   else if (target === "esp2") {
     const res = await fetch("/request_user", {
       method: "GET",
-      body: JSON.stringify({ topic: topic })
+      body: JSON.stringify({ topic: topic + "_2"})
     });
     const data = await res.json();
   }
   else {
     const res = await fetch("/request_user", {
       method: "GET",
-      body: JSON.stringify({ topic: topic + "esp1" }) + JSON.stringify({ topic: topic + "esp2" })
+      body: JSON.stringify({ topic: topic + "_1" }) + JSON.stringify({ topic: topic + "_2" })
     });
     const data = await res.json();
   }
