@@ -31,7 +31,7 @@ async function buzzerSet() {
 }
 
 async function buzzerStop() {
-  apiPost("speaker", 0);
+  apiPost("speaker", 'buzzerStop');
 }
 
 async function setLed() {

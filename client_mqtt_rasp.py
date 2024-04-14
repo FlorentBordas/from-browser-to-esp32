@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import database as db
 
 # Paramètres du broker MQTT
-broker_address = "192.168.85.109"
+broker_address = "172.20.10.2"
 broker_port = 1883
 
 # Topics
@@ -23,6 +23,7 @@ topic_SPK_2 = "speaker_2"
 
 client = mqtt.Client()
 
+
 # Fonction de connexion au broker
 # Souscrire au topic une fois connecté
 def on_connect(client, userdata, flags, rc):
@@ -38,9 +39,11 @@ def on_message(client, userdata, message):
     print("Message reçu on topic " + message.topic)
     db.insert_data(message.topic, message.payload.decode("utf-8"))
 
+
 def send_esp32(topic, value):
     client.publish(topic, value)
     print("++ " + topic + " " + value)
+
 
 def start_mqtt_client():
     client.connect(broker_address, broker_port)
