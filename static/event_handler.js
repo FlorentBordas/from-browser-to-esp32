@@ -1,4 +1,4 @@
-let target = "esp1";
+let target = "";
 
 async function setTarget() {
   const esp1Box = document.getElementById("esp1");
@@ -39,18 +39,41 @@ async function setLed() {
 }
 
 async function photoGet() {
-  apiGet("recv_photoresistance");
+  data = await apiPost("recv_photoresistance", "photoField");
+  if (target === "esp1&esp2") {
+    esp1 = await apiGet("send_photoresistance_1");
+    esp2 = await apiGet("send_photoresistance_2");
+    document.getElementById("result_esp1_p").innerHTML = esp1.value;
+    return document.getElementById("result_esp2_p").innerHTML = esp2.value;
+  }
+  else {
+    esp = await apiGet("send_photoresistance");
+    console.log(esp)
+    return document.getElementById("result_"+target+"_p").innerHTML = esp.value;
+  }
 }
 
 async function buttonGet() {
-  apiGet("recv_button");
+  data = await apiPost("recv_button", "buttonField");
+  if (target === "esp1&esp2") {
+    esp1 = await apiGet("send_button_1");
+    esp2 = await apiGet("send_button_2");
+    document.getElementById("result_esp1_b").innerHTML = esp1.value;
+    return document.getElementById("result_esp2_b").innerHTML = esp2.value;
+  }
+  else {
+    esp = await apiGet("send_button");
+    console.log(esp);
+    return document.getElementById("result_"+target+"_b").innerHTML = esp.value;
+  }
 }
 
 async function apiPost(topic, id) {
   const html_element = document.getElementById(id);
-  if(target === null) {
+  if (target === "") {
     console.log("No Target");
-    return Error;
+    document.getElementById("error").style = "color: firebrick;";
+    return document.getElementById("error").innerHTML = "Please select at least one ESP";
   }
   if (target === "esp1") {
     const res = await fetch("/input_user", {
@@ -82,25 +105,33 @@ async function apiPost(topic, id) {
 
 async function apiGet(topic) {
   if (target === "esp1") {
-    const res = await fetch("/request_user", {
-      method: "GET",
-      body: JSON.stringify({ topic: topic + "_1"})
+    const res = await fetch("/request_user/" + topic + "_1", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'text/json'
+      }
     });
     const data = await res.json();
+    return data;
   }
   else if (target === "esp2") {
-    const res = await fetch("/request_user", {
-      method: "GET",
-      body: JSON.stringify({ topic: topic + "_2"})
+    const res = await fetch("/request_user/" + topic + "_2", {
+      method: 'GET', 
+      headers: {
+        'Content-Type': 'text/json'
+      }
     });
     const data = await res.json();
+    return data;
   }
   else {
-    const res = await fetch("/request_user", {
-      method: "GET",
-      body: JSON.stringify({ topic: topic + "_1" }) + JSON.stringify({ topic: topic + "_2" })
+    const res = await fetch("/request_user/" + topic , {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'text/json'
+      }
     });
     const data = await res.json();
+    return data;
   }
-  return data;
 }

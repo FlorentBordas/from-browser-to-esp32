@@ -25,14 +25,22 @@ class My_HTTP_Handler(BaseHTTPRequestHandler):
         match self.path:
             case "/input_user":
                 data = self.read_json()
-                print(data["topic"])
-                print(data["val"])
                 send_esp32(data["topic"], data["val"])
                 self.send_json(data)
 
-            case "/request_user":
-                data = self.read_json()
+            case "/request_user/send_button_1":
+                data = db.fetch_data("send_button_1")
+                self.send_json(data)
 
+            case "/request_user/send_button_2":
+                data = db.fetch_data("send_button_2")
+                self.send_json(data)
+            case "/request_user/send_photoresistance_1":
+                data = db.fetch_data("send_photoresistance_1")
+                self.send_json(data)
+            case "/request_user/send_photoresistance_2":
+                data = db.fetch_data("send_photoresistance_2")
+                self.send_json(data)
             case _:
                 self.handle_http(404, "text/html")
 

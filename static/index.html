@@ -49,7 +49,7 @@
 		</div>
 
 		<div>
-			<p class="parag">Led_1 Period</p>
+			<p class="parag">Led Period</p>
 			<input type="text" id="ledField" maxlength="5">
 			<button class="button" onclick="setLed()">Set Led Period
 		</div>
@@ -57,12 +57,12 @@
 		<div class="requestBox">
 			<div>
 				<p class="parag">Photosensor</p>
-				<button class="button" onclick="photoGet()">Get Photosensor Value
+				<button class="button" onclick="photoGet()" id="photoField" value="">Get Photosensor Value
 			</div>
 
 			<div>
 				<p class="parag">Button</p>
-				<button class="button" onclick="buttonGet()">Get Button Value
+				<button class="button" onclick="buttonGet()" id="buttonField" value="">Get Button Value
 			</div>
 		</div>
 
@@ -76,8 +76,19 @@
 			<h3 id="error"></h3>
 		</div>
 
-		<div class="result">
-			<h2></h2>
+		<div class="resultBox">
+			<h2 class="parag">Photosensor Value of ESP1</h2>
+			<h3 class="result" id="result_esp1_p" style="color:lightgoldenrodyellow"></h3>
+			<h2 class="parag">Photosensor Value of ESP2</h2>
+			<h3 class="result" id="result_esp2_p" style="color:lightgoldenrodyellow"></h3>
+		</div>
+
+
+		<div class="resultBox">
+			<h2 class="parag">Button Value of ESP1</h2>
+			<h3 class="result" id="result_esp1_b" style="color:lightgoldenrodyellow"></h3>
+			<h2 class="parag">Button Value of ESP2</h2>
+			<h3 class="result" id="result_esp2_b" style="color:lightgoldenrodyellow"></h3>
 		</div>
 </body>
 
