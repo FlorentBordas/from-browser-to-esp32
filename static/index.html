@@ -8,14 +8,14 @@
 </head>
 
 <body>
-	<div class="inputBox">
-		<div>
+	<div class="flexbox-container">
+		<div class="inputBox">
 			<p class="parag">Display Value</p>
 			<input type="text" id="input_display">
 			<button id="button" class="button" onclick="displaySet()">Set Display
 		</div>
 
-		<div>
+		<div class="inputBox">
 			<p class="parag">Buzzer Value</p>
 			<select type="text" id="buzzField">
 				<option value="">Choose a sound to play</option>
@@ -48,22 +48,20 @@
 				<button class="button" onclick="buzzerStop()" value="0" id="buzzerStop">Stop Buzzer
 		</div>
 
-		<div>
+		<div class="inputBox">
 			<p class="parag">Led Period</p>
 			<input type="text" id="ledField" maxlength="5">
 			<button class="button" onclick="setLed()">Set Led Period
 		</div>
 
 		<div class="requestBox">
-			<div>
-				<p class="parag">Photosensor</p>
-				<button class="button" onclick="photoGet()" id="photoField" value="">Get Photosensor Value
-			</div>
+			<p class="parag">Photosensor</p>
+			<button class="button" onclick="photoGet()" id="photoField" value="">Get Photosensor Value
+		</div>
 
-			<div>
-				<p class="parag">Button</p>
-				<button class="button" onclick="buttonGet()" id="buttonField" value="">Get Button Value
-			</div>
+		<div class="requestBox">
+			<p class="parag">Button</p>
+			<button class="button" onclick="buttonGet()" id="buttonField" value="">Get Button Value
 		</div>
 
 		<div class="choiceBox">
@@ -83,13 +81,14 @@
 			<h3 class="result" id="result_esp2_p" style="color:lightgoldenrodyellow"></h3>
 		</div>
 
-
 		<div class="resultBox">
 			<h2 class="parag">Button Value of ESP1</h2>
 			<h3 class="result" id="result_esp1_b" style="color:lightgoldenrodyellow"></h3>
 			<h2 class="parag">Button Value of ESP2</h2>
 			<h3 class="result" id="result_esp2_b" style="color:lightgoldenrodyellow"></h3>
 		</div>
+
+	</div>
 </body>
 
 </html>

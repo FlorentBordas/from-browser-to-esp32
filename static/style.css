@@ -1,7 +1,14 @@
 body {
   background-image: url("background.jpeg");
   background-size: cover;
+}
+
+.flexbox-container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
 }
 
 .button {
@@ -32,10 +39,6 @@ body {
   display: inline-block;
 }
 
-.parag {
-  color: whitesmoke;
-}
-
 .choiceBox {
   backdrop-filter: blur(50px);
   border: 3px solid rebeccapurple;
@@ -45,6 +48,36 @@ body {
   padding: 5px;
 }
 
+.resultBox {
+  backdrop-filter: blur(1000px);
+  border: 3px solid rebeccapurple;
+  margin: 10px;
+  padding: 4px;
+  width: fit-content;
+  height: fit-content;
+}
+
 .checkLabel {
   color: yellow;
+}
+
+h2 {
+  color: #e6b703;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 30px;
+  margin: 0 0 24px;
+  padding: 4px;
+}
+
+.result {
+  color: #e6b703;
+}
+
+p {
+  color: #e6b703;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  margin: 0 0 24px;
+  text-align: justify;
+  text-justify: inter-word;
 }
