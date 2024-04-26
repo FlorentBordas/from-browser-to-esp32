@@ -12,11 +12,11 @@
 #define MAX_WAIT_FOR_TIMER 4
 
 // ----------------------- WiFi -----------------------
-const char *ssid = "RedmiNote11";
-const char *password = "coucoucoucou";
+const char *ssid = "";
+const char *password = "";
 
 // -------------------- MQTT Broker -------------------
-const char *mqtt_broker = "192.168.85.109";
+const char *mqtt_broker = "";
 const int mqtt_port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);

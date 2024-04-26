@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import database as db
 
 # Paramètres du broker MQTT
-broker_address = "172.20.10.2"
+broker_address = "localhost"
 broker_port = 1883
 
 # Topics
