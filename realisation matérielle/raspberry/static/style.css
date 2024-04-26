@@ -81,3 +81,33 @@ p {
   text-align: justify;
   text-justify: inter-word;
 }
+
+.authors {
+  backdrop-filter: url(commonfilters.svg#filter);
+  backdrop-filter: sepia(50%);
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
+  border: 10px ridge #ccccff;
+}
+
+.authors h1 {
+  color: #f87171;
+}
+
+.project {
+  backdrop-filter: url(commonfilters.svg#filter);
+  backdrop-filter: sepia(70%);
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border: 10px ridge #ccccff;
+}
+
+.project h2 {
+  color: #f87171;
+}
+
+.project h4 {
+  color: #6b21a8;
+}
