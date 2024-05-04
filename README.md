@@ -32,3 +32,7 @@ Ensuite, dans un navigateur, accédez à la page :
 ```
 http://adresse_ip:9000
 ```
+
+### Vidéo de démonstration
+
+https://youtu.be/Kifw4Mu1jZc
